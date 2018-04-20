@@ -1,0 +1,2 @@
+Subscribing to topic 'image'
+Received image #1
