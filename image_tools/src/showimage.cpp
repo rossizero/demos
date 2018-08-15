@@ -21,6 +21,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 
 #include "rclcpp/rclcpp.hpp"
+#include "image_transport/image_transport.h"
 
 #include "sensor_msgs/msg/image.hpp"
 
@@ -56,7 +57,7 @@ encoding2mat_type(const std::string & encoding)
 /// Convert the ROS Image message to an OpenCV matrix and display it to the user.
 // \param[in] msg The image message to show.
 void show_image(
-  const sensor_msgs::msg::Image::SharedPtr msg, bool show_camera, rclcpp::Logger logger)
+  const sensor_msgs::msg::Image::ConstSharedPtr msg, bool show_camera, rclcpp::Logger logger)
 {
   RCLCPP_INFO(logger, "Received image #%s", msg->header.frame_id.c_str())
 
@@ -96,15 +97,18 @@ int main(int argc, char * argv[])
   bool show_camera = true;
   std::string topic("image");
 
+  std::string transport("raw");
+
   // Force flush of the stdout buffer.
   // This ensures a correct sync of all prints
   // even when executed simultaneously within a launch file.
   setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 
+
   // Configure demo parameters with command line options.
   if (!parse_command_options(
       argc, argv, &depth, &reliability_policy, &history_policy, &show_camera, nullptr, nullptr,
-      nullptr, nullptr, &topic))
+      nullptr, nullptr, &topic, &transport))
   {
     return 0;
   }
@@ -134,15 +138,14 @@ int main(int argc, char * argv[])
   // parameter.
   custom_qos_profile.history = history_policy;
 
-  auto callback = [show_camera, &node](const sensor_msgs::msg::Image::SharedPtr msg)
+  auto callback = [show_camera, &node](const sensor_msgs::msg::Image::ConstSharedPtr & msg)
     {
       show_image(msg, show_camera, node->get_logger());
     };
 
   RCLCPP_INFO(node->get_logger(), "Subscribing to topic '%s'", topic.c_str())
   // Initialize a subscriber that will receive the ROS Image message to be displayed.
-  auto sub = node->create_subscription<sensor_msgs::msg::Image>(
-    topic, callback, custom_qos_profile);
+  auto sub = image_transport::create_subscription(node, topic, callback, transport, custom_qos_profile);
 
   rclcpp::spin(node);
 

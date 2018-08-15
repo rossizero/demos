@@ -15,6 +15,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(image_transport REQUIRED)
 
 find_package(OpenCV REQUIRED)
 
@@ -29,6 +30,8 @@ ament_target_dependencies(cam2image
   "rclcpp"
   "sensor_msgs"
   "std_msgs"
+  "image_transport"
+  "cv_bridge"
   "OpenCV")
 
 add_executable(showimage
@@ -39,6 +42,8 @@ ament_target_dependencies(showimage
   "rclcpp"
   "sensor_msgs"
   "std_msgs"
+  "image_transport"
+  "cv_bridge"
   "OpenCV")
 
 install(TARGETS

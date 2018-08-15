@@ -55,6 +55,6 @@ bool parse_command_options(
   rmw_qos_reliability_policy_t * reliability_policy,
   rmw_qos_history_policy_t * history_policy, bool * show_camera = nullptr, double * freq = nullptr,
   size_t * width = nullptr, size_t * height = nullptr, bool * burger_mode = nullptr,
-  std::string * topic = nullptr);
+  std::string * topic = nullptr, std::string * transport = nullptr);
 
 #endif  // IMAGE_TOOLS__OPTIONS_HPP_

@@ -48,7 +48,7 @@ bool parse_command_options(
   rmw_qos_reliability_policy_t * reliability_policy,
   rmw_qos_history_policy_t * history_policy, bool * show_camera,
   double * freq, size_t * width, size_t * height, bool * burger_mode,
-  std::string * topic)
+  std::string * topic, std::string * transport)
 {
   std::vector<std::string> args(argv, argv + argc);
 
@@ -81,6 +81,9 @@ bool parse_command_options(
     }
     if (topic != nullptr) {
       ss << " -t TOPIC: use topic TOPIC instead of the default" << std::endl;
+    }
+    if (topic != nullptr) {
+      ss << " -i IMAGE_TRANSPORT: use transport IMAGE_TRANSPORT instead of the default" << std::endl;
     }
     std::cout << ss.str();
     return false;
@@ -136,5 +139,11 @@ bool parse_command_options(
     }
   }
 
+  if (transport != nullptr) {
+    std::string tmptransport = get_command_option(args, "-i");
+    if (!tmptransport.empty()) {
+      *transport = tmptransport;
+    }
+  }
   return true;
 }

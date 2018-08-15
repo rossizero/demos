@@ -21,6 +21,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 
+#include "image_transport/image_transport.h"
+
 #include "sensor_msgs/msg/image.hpp"
 #include "std_msgs/msg/bool.hpp"
 
@@ -94,7 +96,7 @@ int main(int argc, char * argv[])
   // Configure demo parameters with command line options.
   if (!parse_command_options(
       argc, argv, &depth, &reliability_policy, &history_policy, &show_camera, &freq, &width,
-      &height, &burger_mode, &topic))
+      &height, &burger_mode, &topic, nullptr))
   {
     return 0;
   }
@@ -122,9 +124,11 @@ int main(int argc, char * argv[])
   custom_camera_qos_profile.history = history_policy;
 
   RCLCPP_INFO(node_logger, "Publishing data on topic '%s'", topic.c_str())
+
+
+
   // Create the image publisher with our custom QoS profile.
-  auto pub = node->create_publisher<sensor_msgs::msg::Image>(
-    topic, custom_camera_qos_profile);
+  auto pub = image_transport::create_publisher(node, topic, custom_camera_qos_profile);
 
   // is_flipped will cause the incoming camera image message to flip about the y-axis.
   bool is_flipped = false;
@@ -203,7 +207,7 @@ int main(int argc, char * argv[])
       }
       // Publish the image message and increment the frame_id.
       RCLCPP_INFO(node_logger, "Publishing image #%zd", i)
-      pub->publish(msg);
+      pub.publish(msg);
       ++i;
     }
     // Do some work in rclcpp and wait for more to come in.
