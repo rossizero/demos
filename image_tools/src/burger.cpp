@@ -21,7 +21,7 @@
 #include <string>
 #include <vector>
 
-#include "./burger.hpp"
+#include "burger.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
 using burger::Burger;  // i've always wanted to write that

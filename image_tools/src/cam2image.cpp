@@ -26,7 +26,7 @@
 
 #include "image_tools/options.hpp"
 
-#include "./burger.hpp"
+#include "burger.hpp"
 
 /// Convert an OpenCV matrix encoding type to a string format recognized by sensor_msgs::Image.
 /**
